@@ -67,7 +67,7 @@ export function filterSkills(skills: Skill[], search: string, topic: string | nu
 /** Destaque: primeiro repo com topic `featured`, senão o mais recentemente atualizado. */
 export function pickFeatured(skills: Skill[]): Skill | null {
   if (skills.length === 0) return null;
-  return skills.find((s) => s.featured) ?? skills[0];
+  return skills.find((s) => s.featured) ?? skills[0] ?? null;
 }
 
 export function formatRelative(iso: string) {
