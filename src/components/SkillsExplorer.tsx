@@ -111,7 +111,7 @@ export function SkillsExplorer({
       {isPending ? (
         <SkillGridSkeleton count={limit ?? 6} />
       ) : skills.length === 0 ? (
-        <EmptyState title={emptyTitle} description={emptyDescription} />
+        <EmptyState {...(emptyTitle ? { title: emptyTitle } : {})} {...(emptyDescription ? { description: emptyDescription } : {})} />
       ) : results.length === 0 ? (
         <NoResultsState query={search} />
       ) : renderList ? (
