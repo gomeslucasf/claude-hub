@@ -14,7 +14,9 @@ import { Route as AutomacoesRouteImport } from './routes/automacoes'
 import { Route as McpsRouteImport } from './routes/mcps'
 import { Route as RepositoriosRouteImport } from './routes/repositorios'
 import { Route as SkillsRouteImport } from './routes/skills'
+import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as SkillsIndexRouteImport } from './routes/skills.index'
+import { Route as SkillsRepoRouteImport } from './routes/skills.$repo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -41,9 +43,19 @@ const SkillsRoute = SkillsRouteImport.update({
   path: '/skills',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SobreRoute = SobreRouteImport.update({
+  id: '/sobre',
+  path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SkillsIndexRoute = SkillsIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => SkillsRoute,
+} as any)
+const SkillsRepoRoute = SkillsRepoRouteImport.update({
+  id: '/$repo',
+  path: '/$repo',
   getParentRoute: () => SkillsRoute,
 } as any)
 
@@ -53,6 +65,8 @@ export interface FileRoutesByFullPath {
   '/mcps': typeof McpsRoute
   '/repositorios': typeof RepositoriosRoute
   '/skills': typeof SkillsRouteWithChildren
+  '/sobre': typeof SobreRoute
+  '/skills/$repo': typeof SkillsRepoRoute
   '/skills/': typeof SkillsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -60,6 +74,8 @@ export interface FileRoutesByTo {
   '/automacoes': typeof AutomacoesRoute
   '/mcps': typeof McpsRoute
   '/repositorios': typeof RepositoriosRoute
+  '/sobre': typeof SobreRoute
+  '/skills/$repo': typeof SkillsRepoRoute
   '/skills': typeof SkillsIndexRoute
 }
 export interface FileRoutesById {
@@ -69,14 +85,30 @@ export interface FileRoutesById {
   '/mcps': typeof McpsRoute
   '/repositorios': typeof RepositoriosRoute
   '/skills': typeof SkillsRouteWithChildren
+  '/sobre': typeof SobreRoute
+  '/skills/$repo': typeof SkillsRepoRoute
   '/skills/': typeof SkillsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/automacoes' | '/mcps' | '/repositorios' | '/skills' | '/skills/'
+    | '/'
+    | '/automacoes'
+    | '/mcps'
+    | '/repositorios'
+    | '/skills'
+    | '/sobre'
+    | '/skills/$repo'
+    | '/skills/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/automacoes' | '/mcps' | '/repositorios' | '/skills'
+  to:
+    | '/'
+    | '/automacoes'
+    | '/mcps'
+    | '/repositorios'
+    | '/sobre'
+    | '/skills/$repo'
+    | '/skills'
   id:
     | '__root__'
     | '/'
@@ -84,6 +116,8 @@ export interface FileRouteTypes {
     | '/mcps'
     | '/repositorios'
     | '/skills'
+    | '/sobre'
+    | '/skills/$repo'
     | '/skills/'
   fileRoutesById: FileRoutesById
 }
@@ -93,6 +127,7 @@ export interface RootRouteChildren {
   McpsRoute: typeof McpsRoute
   RepositoriosRoute: typeof RepositoriosRoute
   SkillsRoute: typeof SkillsRouteWithChildren
+  SobreRoute: typeof SobreRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -132,6 +167,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SkillsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sobre': {
+      id: '/sobre'
+      path: '/sobre'
+      fullPath: '/sobre'
+      preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/skills/': {
       id: '/skills/'
       path: '/'
@@ -139,14 +181,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SkillsIndexRouteImport
       parentRoute: typeof SkillsRoute
     }
+    '/skills/$repo': {
+      id: '/skills/$repo'
+      path: '/$repo'
+      fullPath: '/skills/$repo'
+      preLoaderRoute: typeof SkillsRepoRouteImport
+      parentRoute: typeof SkillsRoute
+    }
   }
 }
 
 interface SkillsRouteChildren {
+  SkillsRepoRoute: typeof SkillsRepoRoute
   SkillsIndexRoute: typeof SkillsIndexRoute
 }
 
 const SkillsRouteChildren: SkillsRouteChildren = {
+  SkillsRepoRoute: SkillsRepoRoute,
   SkillsIndexRoute: SkillsIndexRoute,
 }
 
@@ -159,6 +210,7 @@ const rootRouteChildren: RootRouteChildren = {
   McpsRoute: McpsRoute,
   RepositoriosRoute: RepositoriosRoute,
   SkillsRoute: SkillsRouteWithChildren,
+  SobreRoute: SobreRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
