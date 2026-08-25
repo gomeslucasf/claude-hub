@@ -15,34 +15,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
-      - run: bun install --frozen-lockfile
-      - run: bun run build
 
-      # Fallback de SPA: rotas internas (/skills, /mcps...) continuam funcionando
-      # após refresh no GitHub Pages.
       - name: SPA fallback + .nojekyll
         run: |
-          OUT=$(ls -d dist/client 2>/dev/null || ls -d dist)
-          cp "$OUT/index.html" "$OUT/404.html" || true
-          touch "$OUT/.nojekyll"
-          echo "OUT_DIR=$OUT" >> $GITHUB_ENV
+          cp public/index.html public/404.html
+          touch public/.nojekyll
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ env.OUT_DIR }}
+          path: public
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
+      - id: deployment
+        uses: actions/deploy-pages@v4
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
