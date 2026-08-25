@@ -1,29 +1,34 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Github } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { FeaturedSkill } from "@/components/FeaturedSkill";
-import { SkillsExplorer, useSkills } from "@/components/SkillsExplorer";
-import { SkillCardSkeleton } from "@/components/states";
-import { pickFeatured } from "@/lib/taxonomy";
+import { ArrowRight, Github, Instagram, Sparkles } from "lucide-react";
+import { SkillsExplorer } from "@/components/SkillsExplorer";
+import { SkillRow } from "@/components/SkillRow";
 import { GITHUB_USER } from "@/services/github";
+
+const INSTAGRAM_URL = "https://instagram.com/gomeslucasf";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Lucas Gomes — Claude, Skills e Automações com IA" },
+      { title: "Lucas Gomes — Skills do Claude no seu bolso" },
       {
         name: "description",
         content:
-          "Skills, MCPs, ferramentas, automações e repositórios para explorar Claude e inteligência artificial na prática.",
+          "Encontre em segundos a skill do Claude que eu mostrei no Instagram: busque pelo nome e abra o passo a passo.",
       },
-      { property: "og:title", content: "Lucas Gomes — Claude, Skills e Automações com IA" },
+      { property: "og:title", content: "Lucas Gomes — Skills do Claude no seu bolso" },
       {
         property: "og:description",
         content:
-          "Skills, MCPs, ferramentas e automações para usar Claude e IA no dia a dia — curadoria por Lucas Gomes.",
+          "Link da bio: busque a skill do Claude que você viu no Instagram e veja como instalar.",
       },
       { property: "og:url", content: "/" },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Lucas Gomes — Skills do Claude no seu bolso" },
+      {
+        name: "twitter:description",
+        content: "Busque a skill do Claude que você viu no Instagram e veja como usar.",
+      },
     ],
     links: [{ rel: "canonical", href: "/" }],
   }),
@@ -31,67 +36,69 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const { skills, isPending } = useSkills();
-  const featured = pickFeatured(skills);
-
   return (
-    <>
-      <section className="relative overflow-hidden border-b border-border/70">
+    <div className="mx-auto w-full max-w-lg px-4 pb-16 pt-8">
+      <section className="relative overflow-hidden rounded-3xl border border-border bg-card px-5 py-7 text-center">
         <div className="grid-backdrop pointer-events-none absolute inset-0" aria-hidden />
-        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-          <p className="inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-3 py-1 font-mono text-xs text-muted-foreground">
-            <span className="size-1.5 rounded-full bg-primary" />
-            Curadoria por Lucas Gomes
+        <div className="relative">
+          <span className="mx-auto grid size-16 place-items-center rounded-2xl bg-primary font-display text-2xl font-bold text-primary-foreground">
+            L
+          </span>
+          <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight">Lucas Gomes</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Skills, automações e ferramentas para usar o Claude no dia a dia.
           </p>
-          <h1 className="mt-6 max-w-3xl font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-6xl">
-            Claude, IA e automações na prática.
-          </h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Skills, ferramentas e repositórios que ajudam você a usar inteligência artificial para
-            automatizar tarefas, trabalhar melhor e explorar todo o potencial do Claude.
+          <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary">
+            <Sparkles className="size-3.5" />
+            Viu no Instagram? Busque a skill abaixo
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button size="lg" asChild>
-              <Link to="/skills">
-                Explorar Skills <ArrowRight className="size-4" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noreferrer">
-                <Github className="size-4" /> Ver GitHub
-              </a>
-            </Button>
+
+          <div className="mt-5 grid grid-cols-2 gap-2">
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-background text-sm font-medium transition-colors active:bg-surface"
+            >
+              <Instagram className="size-4" /> Instagram
+            </a>
+            <a
+              href={`https://github.com/${GITHUB_USER}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-background text-sm font-medium transition-colors active:bg-surface"
+            >
+              <Github className="size-4" /> GitHub
+            </a>
           </div>
-          <p className="mt-6 text-sm text-muted-foreground">
-            Conteúdo testado, organizado e compartilhado para facilitar sua jornada com IA.
-          </p>
         </div>
       </section>
 
-      {(isPending || featured) && (
-        <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-          {isPending ? <SkillCardSkeleton /> : featured && <FeaturedSkill skill={featured} />}
-        </section>
-      )}
-
-      <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 sm:pb-24">
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h2 className="font-display text-2xl font-semibold tracking-tight">Últimas Skills</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Atualizado automaticamente a partir dos repositórios com o topic{" "}
-              <code className="font-mono text-xs text-primary">claude-skill</code>.
-            </p>
-          </div>
-          <Link
-            to="/skills"
-            className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
-          >
-            Ver tudo <ArrowRight className="size-4" />
-          </Link>
-        </div>
-        <SkillsExplorer showSort={false} limit={9} />
+      <section className="mt-8">
+        <h2 className="mb-3 font-display text-lg font-semibold tracking-tight">
+          Encontre a skill
+        </h2>
+        <SkillsExplorer
+          renderList={(skills) => (
+            <div className="flex flex-col gap-3">
+              {skills.map((s) => (
+                <SkillRow key={s.id} skill={s} />
+              ))}
+            </div>
+          )}
+          showSort={false}
+          emptyTitle="Em breve"
+          emptyDescription="As skills que eu mostro no Instagram aparecem aqui automaticamente."
+        />
       </section>
-    </>
+
+      <Link
+        to="/sobre"
+        className="mt-8 flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-4 text-sm transition-colors active:bg-surface"
+      >
+        Como instalar uma skill no Claude
+        <ArrowRight className="size-4 text-muted-foreground" />
+      </Link>
+    </div>
   );
 }
